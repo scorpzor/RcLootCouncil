@@ -145,6 +145,7 @@ L["DPS"] = true
 L["Dropped by:"] = true
 L["Enable Loot History"] = true
 L["enable_loot_history_desc"] = "Enables the history. RCLootCouncil won't log anything if disabled."
+L["Export CSV"] = true
 L["Enter your note:"] = true
 L["Everyone have voted"] = true
 L["Filter"] = true

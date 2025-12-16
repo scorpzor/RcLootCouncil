@@ -6,6 +6,7 @@
 local addon = LibStub("AceAddon-3.0"):GetAddon("RCLootCouncil")
 local LootHistory = addon:NewModule("RCLootHistory")
 local L = LibStub("AceLocale-3.0"):GetLocale("RCLootCouncil")
+local LibDialog = LibStub("LibDialog-1.0")
 local lootDB, scrollCols, data, db, numLootWon;
 --[[ data structure:
 data[date][playerName] = {
@@ -344,6 +345,11 @@ function LootHistory:GetFrame()
 	f.filter = b3
 	Lib_UIDropDownMenu_Initialize(b3, self.FilterMenu)
 
+	local b4 = addon:CreateButton(L["Export CSV"], f.content)
+	b4:SetPoint("RIGHT", b3, "LEFT", -10, 0)
+	b4:SetScript("OnClick", function() LootHistory:ExportCSV() end)
+	f.export = b4
+
 	-- Set a proper width
 	f:SetWidth(st.frame:GetWidth() + 20)
 	return f;
@@ -425,6 +431,7 @@ function LootHistory.FilterMenu(menu, level)
 				info.checked = db.modules["RCLootHistory"].filters[k]
 				Lib_UIDropDownMenu_AddButton(info, level)
 			end
+
 			for k in pairs(data) do -- A bit redundency, but it makes sure these "specials" comes last
 				if type(k) == "string" then
 					if k == "STATUS" then
@@ -445,3 +452,53 @@ function LootHistory.FilterMenu(menu, level)
 			end
 		end
 	end
+
+function LootHistory:ExportCSV()
+	local export = "player, date, time, item, boss, class, instance, reason\n"
+	for i, row in ipairs(self.frame.rows) do
+		if self.FilterFunc(self.frame.st, row) then
+			local d = data[row.date][row.name][row.num]
+			local reasonText = d.response
+			if d.responseID and d.responseID ~= 0 and not d.isAwardReason then
+				local button = addon.db.profile.buttons[d.responseID] or addon.responses[d.responseID]
+				if button then
+					reasonText = button.text
+				end
+			end
+
+			local function clean(str)
+				return tostring(str):gsub(",", "")
+			end
+
+			export = export .. string.format("%s, %s, %s, %s, %s, %s, %s, %s\n",
+				clean(row.name),
+				clean(row.date),
+				clean(d.time or ""),
+				clean(d.lootWon or ""),
+				clean(d.boss or ""),
+				clean(row.class or ""),
+				clean(d.instance or ""),
+				clean(reasonText or "")
+			)
+		end
+	end
+	LibDialog:Spawn("RCLOOTHISTORY_EXPORT_CSV", export)
+end
+
+LibDialog:Register("RCLOOTHISTORY_EXPORT_CSV", {
+	text = "Export CSV",
+	on_show = function(self, data)
+		self.editboxes[1]:SetText(data)
+		self.editboxes[1]:HighlightText()
+		self.editboxes[1]:SetFocus()
+	end,
+	editboxes = {
+		{
+			on_escape_pressed = function(self)
+				LibDialog:Dismiss("RCLOOTHISTORY_EXPORT_CSV")
+			end,
+			width = 400,
+		}
+	},
+})
+
