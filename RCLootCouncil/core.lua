@@ -13,15 +13,18 @@ CHANGELOG
 	-- SEE CHANGELOG.TXT
 ]]
 
-RCLootCouncil = LibStub("AceAddon-3.0"):NewAddon("RCLootCouncil", "AceConsole-3.0", "AceEvent-3.0", "AceComm-3.0", "AceSerializer-3.0", "AceHook-3.0", "AceTimer-3.0");
+local ADDON_NAME = "RCLootCouncil"
+RCLootCouncil = LibStub("AceAddon-3.0"):NewAddon(ADDON_NAME, "AceConsole-3.0", "AceEvent-3.0", "AceComm-3.0", "AceSerializer-3.0", "AceHook-3.0", "AceTimer-3.0");
 local LibDialog = LibStub("LibDialog-1.0")
-local L = LibStub("AceLocale-3.0"):GetLocale("RCLootCouncil")
+local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 local lwin = LibStub("LibWindow-1.1")
 local Deflate = LibStub("LibDeflate")
 local LibGroupTalents = LibStub("LibGroupTalents-1.0")
 
 local GUILD_DEMOTE_PATTERN = "^".._G.ERR_GUILD_DEMOTE_SSS:gsub('%%s', '(.+)').."$"
 local GUILD_PROMOTE_PATTERN = "^".._G.ERR_GUILD_PROMOTE_SSS:gsub('%%s', '(.+)').."$"
+
+local AddonVersion = GetAddOnMetadata(ADDON_NAME, "Version") or "1.0.0"
 
 RCLootCouncil:SetDefaultModuleState(false)
 
@@ -51,7 +54,7 @@ local player_relogged = true -- Determines if we potentially need data from the 
 
 function RCLootCouncil:OnInitialize()
 	--IDEA Consider if we want everything on self, or just whatever modules could need.
-  	self.version = "2.1.3" -- hard code the version so reload ui updates will report correct version
+	self.version = AddonVersion
 	self.nnp = false
 	self.debug = false
 	self.tVersion = nil -- String or nil. Indicates test version, which alters stuff like version check. Is appended to 'version', i.e. "version-tVersion"
