@@ -312,22 +312,18 @@ function LootHistory:GetFrame()
 	f.closeBtn = b1
 
 	-- More info button
-	local b2 = CreateFrame("Button", nil, f.content, "UIPanelButtonTemplate")
+	local b2 = addon:CreateButton(">", f.content)
 	b2:SetSize(25,25)
 	b2:SetPoint("BOTTOMRIGHT", b1, "TOPRIGHT", 0, 10)
-	b2:SetNormalTexture("Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Up")
-	b2:SetPushedTexture("Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Down")
 	b2:SetScript("OnClick", function(button)
 		moreInfo = not moreInfo
 		self.frame.st:ClearSelection()
 		self:UpdateMoreInfo()
 		if moreInfo then -- show the more info frame
-			button:SetNormalTexture("Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Up");
-			button:SetPushedTexture("Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Down");
+			button:SetText("<")
 			self.moreInfo:Show()
 		else -- hide it
-			button:SetNormalTexture("Interface\\Buttons\\UI-SpellbookIcon-NextPage-Up")
-			button:SetPushedTexture("Interface\\Buttons\\UI-SpellbookIcon-NextPage-Down")
+			button:SetText(">")
 			self.moreInfo:Hide()
 		end
 		addon:Debug("moreInfo =",moreInfo)
@@ -343,7 +339,7 @@ function LootHistory:GetFrame()
 	b3:SetScript("OnEnter", function() addon:CreateTooltip(L["Deselect responses to filter them"]) end)
 	b3:SetScript("OnLeave", addon.HideTooltip)
 	f.filter = b3
-	Lib_UIDropDownMenu_Initialize(b3, self.FilterMenu)
+
 
 	local b4 = addon:CreateButton(L["Export CSV"], f.content)
 	b4:SetPoint("RIGHT", b3, "LEFT", -10, 0)
