@@ -454,7 +454,7 @@ function LootHistory.FilterMenu(menu, level)
 	end
 
 function LootHistory:ExportCSV()
-	local export = "player, date, time, item, boss, class, instance, reason\n"
+	local export = "Player, Date, Time, Item, Boss, Class, Instance, Reason\n"
 	for i, row in ipairs(self.frame.rows) do
 		if self.FilterFunc(self.frame.st, row) then
 			local d = data[row.date][row.name][row.num]
