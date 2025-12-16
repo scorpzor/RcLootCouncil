@@ -540,6 +540,7 @@ function RCLootCouncilML:Award(session, winner, response, reason)
 		else -- Direct (we can award from a WoW loot list)
 			if not self.lootOpen then -- we can't give out loot without the loot window open
 				addon:Print(L["Unable to give out loot without the loot window open."])
+				self:TrackAndLogLoot(winner, self.lootTable[session].link, response, self.lootTable[session].boss, 0, nil, nil, {text="AWARD FAILED - CLOSED", log=true, color={1,0,0,1}})
 				--addon:Print(L["Alternatively, flag the loot as award later."])
 				return false
 			end
@@ -573,6 +574,7 @@ function RCLootCouncilML:Award(session, winner, response, reason)
 
 		else -- If we reach here it means we couldn't find a valid MasterLootCandidate, propably due to the winner is unable to receive the loot
 			addon:Print(format(L["Unable to give 'item' to 'player' - (player offline, left group or instance?)"], self.lootTable[session].link, winner))
+			self:TrackAndLogLoot(winner, self.lootTable[session].link, response, self.lootTable[session].boss, 0, nil, nil, {text="AWARD FAILED - OFFLINE/RANGE", log=true, color={1,0,0,1}})
 		end
 		return awarded
 
