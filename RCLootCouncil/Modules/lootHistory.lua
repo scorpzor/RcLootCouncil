@@ -225,7 +225,11 @@ function LootHistory.ResponseSort(table, rowa, rowb, sortbycol)
 
 	if aID and aID ~= 0 then
 		if data[rowa.date][rowa.name][rowa.num].isAwardReason then
-			a = db.awardReasons[aID].sort
+			if db.awardReasons[aID] then
+				a = db.awardReasons[aID].sort
+			else
+				a = 500
+			end
 		else
 			a = addon:GetResponseSort(aID)
 		end
@@ -236,7 +240,11 @@ function LootHistory.ResponseSort(table, rowa, rowb, sortbycol)
 
 	if bID and bID ~= 0 then
 		if data[rowb.date][rowb.name][rowb.num].isAwardReason then
-			b = db.awardReasons[bID].sort
+			if db.awardReasons[bID] then
+				b = db.awardReasons[bID].sort
+			else
+				b = 500
+			end
 		else
 			b = addon:GetResponseSort(bID)
 		end
